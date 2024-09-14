@@ -1,0 +1,59 @@
+Database connection and query:
+
+The main method connects to an Oracle database using JDBC, fetches user records using an SQL query, and passes the results to the Run method for Okta provisioning.
+
+API call to Okta:
+
+The Run method sends user data to Okta via an HTTPS POST request. This method reads the Okta API configuration (URL, token) from a properties file and constructs a JSON payload containing user details.
+
+Error handling:
+
+The try-catch-finally blocks handle any exceptions that may occur during database interaction or API calls. The finally block ensures that resources (like the output stream) are closed properly.
+
+
+Thread Pool (ExecutorService):
+
+Created a thread pool with Executors.newFixedThreadPool(THREAD_POOL_SIZE) to handle multiple tasks concurrently.
+The pool size is configurable and depends on system resources.
+
+
+Batch Processing:
+
+Instead of migrating users one at a time, the code now processes users in batches (e.g., 1000 users per batch). This reduces overhead and improves performance.
+Each batch is processed as a separate task by implementing the Callable<String> interface.
+User Class:
+
+Added a simple User class to hold the user attributes (login, first name, last name, email, and mobile phone).
+
+
+Callable Tasks:
+
+Each batch of users is handled by a UserMigrationTask, which is executed by the thread pool. This allows concurrent migration for different batches.
+The call method processes each user in the batch by invoking the migrateUserToOkta method.
+
+
+Logging and Error Handling:
+
+Each batch logs when it completes, and any errors are printed with clear messages.
+
+How It Works:
+Users are fetched from the Oracle database in batches.
+Each batch is submitted as a separate task to the thread pool for concurrent processing.
+The migrateUserToOkta method is used to send user data to Okta via the API.
+The thread pool processes all tasks in parallel, speeding up the migration process.
+
+Considerations:
+
+Batch size and thread pool size are adjustable depending on the performance of your system and the Okta API rate limits.
+
+Ensure that Okta's rate limits are respected. You may need to throttle requests if necessary by adding a delay between tasks.
+
+Proper error handling and retry mechanisms should be added for real-world scenarios, especially for large-scale migrations.
+
+This approach will allow you to migrate millions of users efficiently while utilizing modern Java concurrency features.
+
+
+
+
+
+
