@@ -1,4 +1,4 @@
-# OKTA-Development
+# OKTA-Dev
 
 Okta is a cloud-based identity and access management (IAM) platform designed to help organizations manage and secure user authentication and authorization for applications, APIs, and services. In development with Okta, key concepts and components include:
 
